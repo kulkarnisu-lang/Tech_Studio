@@ -9,25 +9,34 @@ interface ContactModalProps {
 }
 
 export default function ContactModal({ isOpen, onClose, initialTopic }: ContactModalProps) {
-  const [formData, setFormData] = useState({
+  const getInitialFormData = (topic?: string) => ({
     name: '',
     email: '',
     company: '',
-    serviceInterest: initialTopic || 'Quality Engineering Strategy',
+    serviceInterest: topic || 'Quality Engineering Strategy',
     message: '',
   });
 
+  const [formData, setFormData] = useState(() => getInitialFormData(initialTopic));
   const [submitted, setSubmitted] = useState(false);
 
+  // Reset modal state whenever it is opened
   useEffect(() => {
-    if (initialTopic) {
-      setFormData((prev) => ({ ...prev, serviceInterest: initialTopic }));
+    if (isOpen) {
+      setSubmitted(false);
+      setFormData(getInitialFormData(initialTopic));
     }
-  }, [initialTopic]);
+  }, [isOpen, initialTopic]);
+
+  const handleClose = () => {
+    setSubmitted(false);
+    setFormData(getInitialFormData(initialTopic));
+    onClose();
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -39,7 +48,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -62,7 +71,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
     <div
       id="consultation-modal"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-150"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="relative w-full max-w-lg bg-white dark:bg-[#0C111A] rounded-xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-2xl"
@@ -71,7 +80,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
         {/* Close Button */}
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           aria-label="Close modal"
         >
@@ -107,7 +116,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
             </p>
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="px-3.5 py-1.5 rounded-md text-xs font-mono font-bold uppercase bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
             >
               Done
