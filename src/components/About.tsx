@@ -1,4 +1,4 @@
-import { COMPANY_CONFIG } from '../data/company';
+import { useAdmin } from '../context/AdminContext';
 import { UserCheck, ShieldCheck, Cpu, Sparkles, MapPin, Mail, ArrowUpRight } from 'lucide-react';
 
 interface AboutProps {
@@ -6,6 +6,7 @@ interface AboutProps {
 }
 
 export default function About({ onOpenConsultation }: AboutProps) {
+  const { companyConfig } = useAdmin();
   return (
     <section id="about" className="py-16 sm:py-20 bg-slate-50/60 dark:bg-[#0A0C10] border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,27 +64,27 @@ export default function About({ onOpenConsultation }: AboutProps) {
                 </div>
                 <div>
                   <div className="text-[10px] font-mono uppercase font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                    {COMPANY_CONFIG.founderTitle}
+                    {companyConfig.founderTitle}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-[#F8FAFC]">
-                    {COMPANY_CONFIG.founderName}
+                    {companyConfig.founderName}
                   </h3>
                 </div>
               </div>
 
               <div className="space-y-3.5 mb-5">
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {COMPANY_CONFIG.founderBio}
+                  {companyConfig.founderBio}
                 </p>
 
                 <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Location: {COMPANY_CONFIG.location}</span>
+                    <span>Location: {companyConfig.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Direct: {COMPANY_CONFIG.email}</span>
+                    <span>Direct: {companyConfig.email}</span>
                   </div>
                 </div>
               </div>

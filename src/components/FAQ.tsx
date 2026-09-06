@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { FAQS_DATA } from '../data/faqs';
+import { useAdmin } from '../context/AdminContext';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 export default function FAQ() {
+  const { faqs } = useAdmin();
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({
     'faq-1': true,
     'faq-4': true,
@@ -20,8 +21,8 @@ export default function FAQ() {
 
   const filteredFAQs =
     selectedCategory === 'All'
-      ? FAQS_DATA
-      : FAQS_DATA.filter((f) => f.category === selectedCategory);
+      ? faqs
+      : faqs.filter((f) => f.category === selectedCategory);
 
   return (
     <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-[#0A0C10] border-b border-slate-200 dark:border-slate-800">

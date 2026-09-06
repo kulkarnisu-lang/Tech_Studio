@@ -1,7 +1,9 @@
-import { ArrowUp, Terminal, Mail, Linkedin, Github } from 'lucide-react';
-import { COMPANY_CONFIG } from '../data/company';
+import { ArrowUp, Terminal, Mail, Linkedin, Github, Shield } from 'lucide-react';
+import { useAdmin } from '../context/AdminContext';
 
 export default function Footer() {
+  const { companyConfig, openAdmin } = useAdmin();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -27,7 +29,7 @@ export default function Footer() {
               <div className="w-7 h-7 rounded-md bg-slate-800 text-sky-400 flex items-center justify-center border border-slate-700">
                 <Terminal className="w-3.5 h-3.5" />
               </div>
-              <span>{COMPANY_CONFIG.name}</span>
+              <span>{companyConfig.name}</span>
             </div>
 
             <p className="text-xs text-sky-400 font-mono font-medium">
@@ -35,12 +37,12 @@ export default function Footer() {
             </p>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              {COMPANY_CONFIG.positioning}
+              {companyConfig.positioning}
             </p>
 
             <div className="flex items-center gap-2.5 pt-1">
               <a
-                href={COMPANY_CONFIG.linkedinUrl}
+                href={companyConfig.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-md bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-sky-500 transition-colors"
@@ -49,7 +51,7 @@ export default function Footer() {
                 <Linkedin className="w-3.5 h-3.5" />
               </a>
               <a
-                href={COMPANY_CONFIG.githubUrl}
+                href={companyConfig.githubUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-md bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-sky-500 transition-colors"
@@ -58,7 +60,7 @@ export default function Footer() {
                 <Github className="w-3.5 h-3.5" />
               </a>
               <a
-                href={`mailto:${COMPANY_CONFIG.email}`}
+                href={`mailto:${companyConfig.email}`}
                 className="w-8 h-8 rounded-md bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-sky-500 transition-colors"
                 aria-label="Email"
               >
@@ -124,19 +126,30 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-slate-400">
-            <span>&copy; 2026 {COMPANY_CONFIG.name}. All rights reserved.</span>
+            <span>&copy; 2026 {companyConfig.name}. All rights reserved.</span>
             <span className="hidden sm:inline-block">&bull;</span>
             <span className="text-slate-500 font-mono">Built for better software quality.</span>
           </div>
 
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-mono transition-colors"
-          >
-            <span>Back to top</span>
-            <ArrowUp className="w-3 h-3" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={openAdmin}
+              className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-slate-500 hover:text-sky-400 font-mono transition-colors cursor-pointer"
+            >
+              <Shield className="w-3 h-3 text-sky-500" />
+              <span>Admin Console</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-mono transition-colors cursor-pointer"
+            >
+              <span>Back to top</span>
+              <ArrowUp className="w-3 h-3" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

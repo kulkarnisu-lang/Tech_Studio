@@ -1,13 +1,14 @@
 import { useState, useEffect, type MouseEvent } from 'react';
-import { Menu, X, ArrowUpRight, Terminal } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Terminal, Shield } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import { COMPANY_CONFIG } from '../data/company';
+import { useAdmin } from '../context/AdminContext';
 
 interface NavbarProps {
   onOpenConsultation: (topic?: string) => void;
 }
 
 export default function Navbar({ onOpenConsultation }: NavbarProps) {
+  const { companyConfig, openAdmin } = useAdmin();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -77,7 +78,7 @@ export default function Navbar({ onOpenConsultation }: NavbarProps) {
               <Terminal className="w-4 h-4 stroke-[2.5]" />
             </div>
             <span className="font-mono text-lg font-extrabold tracking-tight">
-              {COMPANY_CONFIG.name}
+              {companyConfig.name}
             </span>
           </a>
 
@@ -100,13 +101,23 @@ export default function Navbar({ onOpenConsultation }: NavbarProps) {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={openAdmin}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-mono font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+              title="Admin Portal (#admin)"
+            >
+              <Shield className="w-3.5 h-3.5 text-sky-500" />
+              <span>Admin</span>
+            </button>
+
             <ThemeToggle />
             <button
               id="navbar-cta-btn"
               type="button"
               onClick={() => onOpenConsultation('General Advisory')}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-950 bg-sky-500 hover:bg-sky-400 transition-all shadow-sm active:scale-98"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-950 bg-sky-500 hover:bg-sky-400 transition-all shadow-sm active:scale-98 cursor-pointer"
             >
               <span>Book a Consultation</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -115,6 +126,14 @@ export default function Navbar({ onOpenConsultation }: NavbarProps) {
 
           {/* Mobile Actions */}
           <div className="flex md:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={openAdmin}
+              className="p-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-sky-500"
+              title="Admin Portal"
+            >
+              <Shield className="w-4 h-4 text-sky-500" />
+            </button>
             <ThemeToggle />
             <button
               id="mobile-menu-toggle"
@@ -150,6 +169,19 @@ export default function Navbar({ onOpenConsultation }: NavbarProps) {
                 {link.name}
               </a>
             ))}
+
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openAdmin();
+              }}
+              className="px-3 py-2 rounded-md text-xs font-mono uppercase font-bold text-sky-600 dark:text-sky-400 flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-left"
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>Admin Operations Console</span>
+            </button>
+
             <div className="pt-4 mt-2 border-t border-slate-200 dark:border-slate-800">
               <button
                 type="button"

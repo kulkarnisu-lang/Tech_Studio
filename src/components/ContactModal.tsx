@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { X, Send, CheckCircle2, Terminal } from 'lucide-react';
-import { COMPANY_CONFIG } from '../data/company';
+import { useAdmin } from '../context/AdminContext';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -9,6 +9,8 @@ interface ContactModalProps {
 }
 
 export default function ContactModal({ isOpen, onClose, initialTopic }: ContactModalProps) {
+  const { companyConfig, addInquiry } = useAdmin();
+
   const getInitialFormData = (topic?: string) => ({
     name: '',
     email: '',
@@ -56,6 +58,16 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
     e.preventDefault();
     if (!formData.name || !formData.email) return;
 
+    // Log inquiry to admin dashboard
+    addInquiry({
+      name: formData.name,
+      email: formData.email,
+      company: formData.company,
+      serviceInterest: formData.serviceInterest,
+      message: formData.message || 'Consultation request from website modal.',
+      source: 'modal',
+    });
+
     const subject = encodeURIComponent(
       `[Consultation] ${formData.serviceInterest} - ${formData.company || formData.name}`
     );
@@ -63,7 +75,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
       `Name: ${formData.name}\nEmail: ${formData.email}\nCompany: ${formData.company}\nInterest: ${formData.serviceInterest}\n\nMessage:\n${formData.message}`
     );
 
-    window.location.href = `mailto:${COMPANY_CONFIG.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${companyConfig.email}?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
 
@@ -93,7 +105,7 @@ export default function ContactModal({ isOpen, onClose, initialTopic }: ContactM
             <Terminal className="w-3 h-3" />
           </div>
           <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider">
-            {COMPANY_CONFIG.name} Advisory
+            {companyConfig.name} Advisory
           </span>
         </div>
 

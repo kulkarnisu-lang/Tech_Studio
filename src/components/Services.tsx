@@ -11,7 +11,7 @@ import {
   ChevronUp,
   type LucideIcon,
 } from 'lucide-react';
-import { SERVICES_DATA } from '../data/services';
+import { useAdmin } from '../context/AdminContext';
 
 interface ServicesProps {
   onOpenConsultation: (serviceTitle?: string) => void;
@@ -27,6 +27,7 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 export default function Services({ onOpenConsultation }: ServicesProps) {
+  const { services } = useAdmin();
   const [expandedId, setExpandedId] = useState<string | null>('ai-powered-automation');
 
   const toggleExpand = (id: string) => {
@@ -51,7 +52,7 @@ export default function Services({ onOpenConsultation }: ServicesProps) {
 
         {/* 6 Service Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SERVICES_DATA.map((service, idx) => {
+          {services.map((service, idx) => {
             const Icon = iconMap[service.icon] || ShieldCheck;
             const isFeatured = service.isFeatured;
             const isExpanded = expandedId === service.id;

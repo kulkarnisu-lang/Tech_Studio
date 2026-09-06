@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { COMPANY_CONFIG } from '../data/company';
+import { useAdmin } from '../context/AdminContext';
 import { Mail, Linkedin, Calendar, Send, CheckCircle2, Copy, ArrowUpRight } from 'lucide-react';
 
 interface ContactSectionProps {
@@ -7,6 +7,8 @@ interface ContactSectionProps {
 }
 
 export default function ContactSection({ initialTopic }: ContactSectionProps) {
+  const { companyConfig, addInquiry } = useAdmin();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,6 +24,16 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
 
+    // Log to admin portal CRM
+    addInquiry({
+      name: formData.name,
+      email: formData.email,
+      company: formData.company,
+      serviceInterest: formData.serviceInterest,
+      message: formData.message || 'Consultation request from website contact section.',
+      source: 'contact-form',
+    });
+
     // Compose mailto fallback
     const subject = encodeURIComponent(
       `[Consultation Request] ${formData.serviceInterest} - ${formData.company || formData.name}`
@@ -30,12 +42,12 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
       `Name: ${formData.name}\nEmail: ${formData.email}\nCompany: ${formData.company}\nInterest: ${formData.serviceInterest}\n\nMessage:\n${formData.message}`
     );
 
-    window.location.href = `mailto:${COMPANY_CONFIG.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${companyConfig.email}?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
 
   const copyEmail = () => {
-    navigator.clipboard.writeText(COMPANY_CONFIG.email);
+    navigator.clipboard.writeText(companyConfig.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -68,10 +80,10 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
                   <div>
                     <span className="text-[10px] font-mono text-slate-400 block">EMAIL US DIRECTLY</span>
                     <a
-                      href={`mailto:${COMPANY_CONFIG.email}`}
+                      href={`mailto:${companyConfig.email}`}
                       className="text-xs sm:text-sm font-bold text-slate-900 dark:text-[#F8FAFC] hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
                     >
-                      {COMPANY_CONFIG.email}
+                      {companyConfig.email}
                     </a>
                   </div>
                 </div>
@@ -88,7 +100,7 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
 
               {/* LinkedIn Connect */}
               <a
-                href={COMPANY_CONFIG.linkedinUrl}
+                href={companyConfig.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0C111A] border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group"
@@ -100,7 +112,7 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
                   <div>
                     <span className="text-[10px] font-mono text-slate-400 block">CONNECT ON LINKEDIN</span>
                     <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-[#F8FAFC] group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
-                      {COMPANY_CONFIG.name} Leadership
+                      {companyConfig.name} Leadership
                     </span>
                   </div>
                 </div>
@@ -139,7 +151,7 @@ export default function ContactSection({ initialTopic }: ContactSectionProps) {
                     Consultation Draft Initiated
                   </h4>
                   <p className="text-xs text-emerald-700 dark:text-emerald-300">
-                    Your email client should have opened with your pre-filled inquiry. You can also reach us directly at {COMPANY_CONFIG.email}.
+                    Your email client should have opened with your pre-filled inquiry. You can also reach us directly at {companyConfig.email}.
                   </p>
                   <button
                     type="button"

@@ -135,3 +135,26 @@ export interface FAQItem {
   answer: string;
   category: 'Services' | 'Automation' | 'AI' | 'Consulting';
 }
+
+export type InquiryStatus = 'new' | 'contacted' | 'in-progress' | 'closed';
+
+export interface AdminInquiry {
+  id: string;
+  name: string;
+  email: string;
+  company: string;
+  serviceInterest: string;
+  message: string;
+  createdAt: string;
+  status: InquiryStatus;
+  notes?: string;
+  source: 'modal' | 'contact-form' | 'manual';
+}
+
+export interface AdminActivityLog {
+  id: string;
+  timestamp: string;
+  action: string;
+  details: string;
+  user: string;
+}

@@ -18,8 +18,11 @@ import FAQ from './components/FAQ';
 import ContactSection from './components/ContactSection';
 import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
+import { AdminProvider, useAdmin } from './context/AdminContext';
+import AdminPortal from './components/admin/AdminPortal';
 
-export default function App() {
+function AppContent() {
+  const { isAdminView } = useAdmin();
   const [modalOpen, setModalOpen] = useState(false);
   const [consultationTopic, setConsultationTopic] = useState<string | undefined>();
 
@@ -31,6 +34,10 @@ export default function App() {
   const handleCloseConsultation = () => {
     setModalOpen(false);
   };
+
+  if (isAdminView) {
+    return <AdminPortal />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 text-slate-900 dark:bg-[#0A0C10] dark:text-[#F8FAFC] selection:bg-sky-500 selection:text-slate-950 transition-colors duration-200">
@@ -69,3 +76,12 @@ export default function App() {
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <AdminProvider>
+      <AppContent />
+    </AdminProvider>
+  );
+}
+
